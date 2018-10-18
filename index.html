@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Patatap Clone</title>
+    <!--Css file-->
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <!--Link to PaperScript-->
+    <script type="text/javascript" src="paper-full.js"></script>
+    <!--Link to howler.js cdn-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.15/howler.js"></script>
+
+    <!--Paperscript script-->
+    <script type="text/paperscript" canvas="myCanvas">
+
+    // Create key data
+    var keyData = {
+
+      a: {
+        color: "blue",
+        sound: new Howl({
+          src: ['sounds/bubbles.mp3']
+        })
+      },
+      q: {
+        color: "red",
+        sound: new Howl({
+          src: ['sounds/clay.mp3']
+        })
+      },
+      z: {
+        color: "green",
+        sound: new Howl({
+          src: ['sounds/confetti.mp3']
+        })
+      },
+      w: {
+        color: "pink",
+        sound: new Howl({
+          src: ['sounds/corona.mp3']
+        })
+      },
+      s: {
+        color: "purple",
+        sound: new Howl({
+          src: ['sounds/dotted-spiral.mp3']
+        })
+      },
+      x: {
+        color: "yellow",
+        sound: new Howl({
+          src: ['sounds/flash-1.mp3']
+        })
+      },
+      e: {
+        color: "brown",
+        sound: new Howl({
+          src: ['sounds/flash-2.mp3']
+        })
+      },
+      d: {
+        color: "teal",
+        sound: new Howl({
+          src: ['sounds/flash-3.mp3']
+        })
+      },
+      c: {
+        color: "white",
+        sound: new Howl({
+          src: ['sounds/glimmer.mp3']
+        })
+      }
+
+    };
+
+      // Get circles array
+      var circles = [];
+
+      // Listen for key press
+      function onKeyDown(event) {
+        // Set truthy statement to run
+        if(keyData[event.key]) {
+          // Generate max width and max height of window
+          var maxPoint = new Point(view.size.width, view.size.height)
+          // Generate random point to put circle
+          var randomPoint = Point.random();
+          // Set point where circle will go
+          var point = maxPoint * randomPoint;
+          // Set new circle variable
+          var newCircle = new Path.Circle(new Point(point), 500);
+          // Get color data for the key that was pressed, set color to circle
+          newCircle.fillColor = keyData[event.key].color;
+          // Play specific sound
+          keyData[event.key].sound.play();
+        	// When a key is pressed, set circle and add it to color array
+          circles.push(newCircle);
+        }
+      }
+
+      function onFrame(event) {
+        for (var i = 0; i < circles.length; i++) {
+          // Each frame, change the fill color of the path slightly by
+        	// adding 1 to its hue:
+          circles[i].fillColor.hue += 1;
+          // Shrink circle with time
+          circles[i].scale(.9);
+          // When circles get miniscule, remove them and delete from array
+          if(circles[i].area < 1){
+            circles[i].remove(); // remove the circle from the canvas
+            circles.splice(i, 1); // remove the circle from the array
+          }
+        }
+      }
+
+    </script>
+  </head>
+  <body>
+
+    <canvas id="myCanvas" resize></canvas>
+
+  </body>
+</html>
